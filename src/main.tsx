@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const client_ID =
     process.env.REACT_APP_CLIENTID ||
-    "199046025326-i7uti7dcg2vbo78vm8esb96kokmgl246.apps.googleusercontent";
+    "199046025326-i7uti7dcg2vbo78vm8esb96kokmgl246.apps.googleusercontent.com";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>

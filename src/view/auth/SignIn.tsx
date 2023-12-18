@@ -5,7 +5,10 @@ import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { setUser } from "../../redux/reducers/auth/authSlice";
-import { useSignInMutation } from "../../redux/reducers/auth/auth";
+import {
+    useSignInMutation,
+    useGsigninMutation,
+} from "../../redux/reducers/auth/auth";
 import { AppleIcon, LoadingIcon } from "../../Icon";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -14,7 +17,7 @@ function SignIn() {
     const dispatch = useDispatch();
     const [loading, setLoading] = React.useState<boolean>(false);
     const [signin] = useSignInMutation();
-
+    const [gsignin] = useGsigninMutation();
     const formik = useFormik({
         initialValues: {
             email: "",
@@ -48,8 +51,21 @@ function SignIn() {
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const responseMessage = (response: any) => {
-        console.log(response);
+    const responseMessage = async (response: GSignValidInterface) => {
+        setLoading(true);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data, error }: any = await gsignin({
+            token: response.credential,
+        });
+        setLoading(false);
+
+        if (!error) {
+            dispatch(setUser(data.token));
+            toast.success("Welcome");
+            navigate("/dashboard");
+        } else {
+            toast.error(error.data || "Failed SignIn");
+        }
     };
 
     return (
@@ -68,13 +84,13 @@ function SignIn() {
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="mt-5">
                     <div className="flex justify-center items-center gap-5 flex-wrap sm:flex-nowrap">
-                        {/* <GoogleLogin
+                        <GoogleLogin
                             onSuccess={responseMessage}
                             onError={() => {
                                 console.log("Login Failed");
                             }}
                             useOneTap
-                        /> */}
+                        />
                         {/* <button
                             className="flex items-center gap-2 w-full justify-center rounded-md bg-transparent px-3 py-1.5 border-[1px] border-zinc-300 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-zinc-100"
                         >

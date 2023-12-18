@@ -48,6 +48,13 @@ export const authSlice = createSlice({
         builder.addMatcher(api.endpoints.signUp.matchPending, (state) => {
             state.authStatus = "pending";
         });
+        builder.addMatcher(
+            api.endpoints.gsignin.matchFulfilled,
+            (state, { payload: { token } }) => {
+                state.authStatus = "idle";
+                localStorage.setItem(AUTH_KEY, token);
+            }
+        );
     },
 });
 

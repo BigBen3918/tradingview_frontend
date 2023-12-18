@@ -22,10 +22,17 @@ export const api = createApi({
                 body: credentials,
             }),
         }),
+        gsignin: builder.mutation<{ token: string }, { token: string }>({
+            query: (credentials) => ({
+                url: "g-login",
+                method: "POST",
+                body: credentials,
+            }),
+        }),
         signUp: builder.mutation<{ message: string }, void>({
             query: () => "protected",
         }),
     }),
 });
 
-export const { useSignInMutation, useSignUpMutation } = api;
+export const { useSignInMutation, useSignUpMutation, useGsigninMutation } = api;
