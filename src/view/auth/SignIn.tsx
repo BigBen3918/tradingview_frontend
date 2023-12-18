@@ -68,24 +68,20 @@ function SignIn() {
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="mt-5">
                     <div className="flex justify-center items-center gap-5 flex-wrap sm:flex-nowrap">
-                        <GoogleLogin
+                        {/* <GoogleLogin
                             onSuccess={responseMessage}
                             onError={() => {
                                 console.log("Login Failed");
                             }}
                             useOneTap
-                        />
+                        /> */}
                         {/* <button
-                            type="submit"
                             className="flex items-center gap-2 w-full justify-center rounded-md bg-transparent px-3 py-1.5 border-[1px] border-zinc-300 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-zinc-100"
                         >
                             <GoogleIcon />
                             Log in with Google
                         </button> */}
-                        <button
-                            type="submit"
-                            className="flex items-center gap-2 w-full justify-center rounded-md bg-transparent px-3 py-1.5 border-[1px] border-zinc-300 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-zinc-100"
-                        >
+                        <button className="flex items-center gap-2 w-full justify-center rounded-md bg-transparent px-3 py-1.5 border-[1px] border-zinc-300 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-zinc-100">
                             <AppleIcon />
                             Log in with Apple
                         </button>

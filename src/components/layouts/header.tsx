@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
 import { HamburgerIcon } from "../../Icon";
-import { logout } from "../../redux/reducers/auth/authSlice";
+import { logout, setUser } from "../../redux/reducers/auth/authSlice";
+import { AUTH_KEY } from "../../redux/reducers/auth/key";
 
 function Header() {
     const dispatch = useDispatch();
@@ -13,6 +14,16 @@ function Header() {
     const user = useSelector((state: RootState) => state.auth.user);
     const [openNav, setOpenNav] = useState<boolean>(false);
     const [openUserNav, setOpenUserNav] = useState<boolean>(false);
+
+    useEffect(() => {
+        const authToken = localStorage.getItem(AUTH_KEY);
+
+        if (!authToken) {
+            dispatch(logout());
+        } else {
+            dispatch(setUser(authToken));
+        }
+    }, []);
 
     const SignOut = () => {
         setOpenNav(false);

@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.Toastify__toast {
+    border-radius: 6px !important;
+}
+
+.Toastify__toast-icon {
+    width: 30px !important;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.Toastify__toast--error .Toastify__toast-icon {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+.Toastify__toast--warning .Toastify__toast-icon {
+    background-color: rgba(255, 255, 0, 0.2);
+}
+
+.Toastify__toast--success .Toastify__toast-icon {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+.Toastify__toast--info .Toastify__toast-icon {
+    background-color: rgba(0, 0, 255, 0.2);
+}
+
+.Toastify__close-button {
+    margin-top: 15px;
+    padding: 0 10px !important;
+}

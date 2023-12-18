@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 import App from "./App.tsx";
 import { store } from "./redux/store";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -21,7 +21,18 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 <Router>
                     <App />
 
-                    <ToastContainer />
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={115000}
+                        hideProgressBar={true}
+                        newestOnTop={true}
+                        closeOnClick={true}
+                        rtl={false}
+                        pauseOnHover={true}
+                        draggable={true}
+                        pauseOnFocusLoss={true}
+                        transition={Slide}
+                    />
                 </Router>
             </GoogleOAuthProvider>
         </Provider>
