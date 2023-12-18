@@ -1,9 +1,24 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../redux/store";
 import { HamburgerIcon } from "../../Icon";
+import { logout } from "../../redux/reducers/auth/authSlice";
 
 function Header() {
+    const dispatch = useDispatch();
+    const isAuth = useSelector(
+        (state: RootState) => state.auth.isAuthenticated
+    );
+    const user = useSelector((state: RootState) => state.auth.user);
     const [openNav, setOpenNav] = useState<boolean>(false);
+    const [openUserNav, setOpenUserNav] = useState<boolean>(false);
+
+    const SignOut = () => {
+        setOpenNav(false);
+        setOpenUserNav(false);
+        dispatch(logout());
+    };
 
     return (
         // Main navigation container
@@ -49,18 +64,64 @@ function Header() {
                     </ul>
 
                     <div className="flex justify-center items-center gap-3">
-                        <Link
-                            to="/login"
-                            className="text-gray-800 bg-gray-200 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none transition-all duration-300"
-                        >
-                            Sign in
-                        </Link>
-                        <Link
-                            to="/register"
-                            className="text-white bg-blue-700 hover:bg-blue-900 focus:ring-4 focus:ring-blue-400 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none transition-all duration-300"
-                        >
-                            Sign Up For Free
-                        </Link>
+                        {isAuth ? (
+                            <div className="relative">
+                                <button
+                                    className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300"
+                                    onClick={() => setOpenUserNav(!openUserNav)}
+                                >
+                                    <span className="sr-only">
+                                        Open user menu
+                                    </span>
+                                    <img
+                                        className="w-8 h-8 rounded-full"
+                                        src="/assets/avatar.png"
+                                        alt="user photo"
+                                    />
+                                </button>
+
+                                {openUserNav && (
+                                    <div className="absolute top-full right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-md">
+                                        <div className="px-4 py-3">
+                                            <span className="block text-sm text-gray-900 dark:text-white">
+                                                {user?.username}
+                                            </span>
+                                            <span className="block text-sm  text-gray-500 truncate dark:text-gray-400">
+                                                {user?.email}
+                                            </span>
+                                        </div>
+                                        <ul
+                                            className="py-2"
+                                            aria-labelledby="user-menu-button"
+                                        >
+                                            <li>
+                                                <button
+                                                    className="w-full flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                    onClick={SignOut}
+                                                >
+                                                    Sign out
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/login"
+                                    className="text-gray-800 bg-gray-200 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none transition-all duration-300"
+                                >
+                                    Sign in
+                                </Link>
+                                <Link
+                                    to="/register"
+                                    className="text-white bg-blue-700 hover:bg-blue-900 focus:ring-4 focus:ring-blue-400 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none transition-all duration-300"
+                                >
+                                    Sign Up For Free
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -76,18 +137,26 @@ function Header() {
                         }
                     >
                         <div className="bg-white text-black px-10 py-2 flex flex-col items-center justify-center">
-                            <Link
-                                to="/login"
-                                className="px-5 py-3 hover:text-blue-700"
-                            >
-                                Sign In
-                            </Link>
-                            <Link
-                                to="/register"
-                                className="px-5 py-3 hover:text-blue-700"
-                            >
-                                Sign Up
-                            </Link>
+                            {isAuth ? (
+                                <button className="px-5 py-3 hover:text-blue-700">
+                                    Sign Out
+                                </button>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/login"
+                                        className="px-5 py-3 hover:text-blue-700"
+                                    >
+                                        Sign In
+                                    </Link>
+                                    <Link
+                                        to="/register"
+                                        className="px-5 py-3 hover:text-blue-700"
+                                    >
+                                        Sign Up
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

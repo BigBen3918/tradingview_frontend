@@ -1,14 +1,19 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-import { GoogleIcon, AppleIcon, LoadingIcon } from "../../Icon";
-import Action from "../../service";
+import { setUser } from "../../redux/reducers/auth/authSlice";
+import { useSignInMutation } from "../../redux/reducers/auth/auth";
+import { AppleIcon, LoadingIcon } from "../../Icon";
+import { GoogleLogin } from "@react-oauth/google";
 
 function SignIn() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [signin] = useSignInMutation();
 
     const formik = useFormik({
         initialValues: {
@@ -28,18 +33,24 @@ function SignIn() {
         }),
         onSubmit: async (values: SignValidInterface) => {
             setLoading(true);
-            const { success, msg, token } = await Action.Login(values);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { data, error }: any = await signin(values);
             setLoading(false);
 
-            if (success) {
-                console.log(token);
-                toast.success(msg);
-                navigate("/");
+            if (!error) {
+                dispatch(setUser(data.token));
+                toast.success("Welcome");
+                navigate("/dashboard");
             } else {
-                toast.error(msg);
+                toast.error(error.data || "Failed SignIn");
             }
         },
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const responseMessage = (response: any) => {
+        console.log(response);
+    };
 
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -57,13 +68,20 @@ function SignIn() {
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="mt-5">
                     <div className="flex justify-center items-center gap-5 flex-wrap sm:flex-nowrap">
-                        <button
+                        <GoogleLogin
+                            onSuccess={responseMessage}
+                            onError={() => {
+                                console.log("Login Failed");
+                            }}
+                            useOneTap
+                        />
+                        {/* <button
                             type="submit"
                             className="flex items-center gap-2 w-full justify-center rounded-md bg-transparent px-3 py-1.5 border-[1px] border-zinc-300 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-zinc-100"
                         >
                             <GoogleIcon />
                             Log in with Google
-                        </button>
+                        </button> */}
                         <button
                             type="submit"
                             className="flex items-center gap-2 w-full justify-center rounded-md bg-transparent px-3 py-1.5 border-[1px] border-zinc-300 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-zinc-100"
@@ -122,7 +140,7 @@ function SignIn() {
                             </label>
                             <div className="text-sm">
                                 <Link
-                                    to="/"
+                                    to="/forgot"
                                     className="font-semibold text-indigo-600 hover:text-indigo-500"
                                 >
                                     Forgot password?

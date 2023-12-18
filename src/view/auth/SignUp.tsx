@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-import { GoogleIcon, AppleIcon, LoadingIcon } from "../../Icon";
+import { LoadingIcon } from "../../Icon";
 import Action from "../../service";
 
 function SignUp() {
@@ -59,30 +59,6 @@ function SignUp() {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="mt-5">
-                    <div className="flex justify-center items-center gap-5 flex-wrap sm:flex-nowrap">
-                        <button
-                            type="submit"
-                            className="flex items-center gap-2 w-full justify-center rounded-md bg-transparent px-3 py-1.5 border-[1px] border-zinc-300 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-zinc-100"
-                        >
-                            <GoogleIcon />
-                            Sign Up with Google
-                        </button>
-                        <button
-                            type="submit"
-                            className="flex items-center gap-2 w-full justify-center rounded-md bg-transparent px-3 py-1.5 border-[1px] border-zinc-300 text-sm font-semibold leading-6 text-black shadow-sm hover:bg-zinc-100"
-                        >
-                            <AppleIcon />
-                            Sign Up with Apple
-                        </button>
-                    </div>
-                    <div className="flex items-center justify-center gap-5 py-5">
-                        <div className="h-0.5 bg-zinc-300 w-full"></div>
-                        <div>or</div>
-                        <div className="h-0.5 bg-zinc-300 w-full"></div>
-                    </div>
-                </div>
-
                 <form onSubmit={formik.handleSubmit} className="space-y-6">
                     <div>
                         <label
