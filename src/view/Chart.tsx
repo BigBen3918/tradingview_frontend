@@ -55,7 +55,11 @@ function Chart() {
             container.current?.removeChild(container.current?.children[i]);
         }
 
-        getTradingView(tokens[Math.floor(Math.random() * tokens.length)]);
+        if (tokens.length > 0) {
+            getTradingView(tokens[Math.floor(Math.random() * tokens.length)]);
+        } else {
+            getTradingView("BITSTAMP:ETHUSD");
+        }
     };
 
     return (
