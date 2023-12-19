@@ -12,7 +12,7 @@ function Chart() {
         setTokens(name);
     };
 
-    const getTradingView = (symbol_param: string) => {
+    const getTradingView = (symbol_param: string, type_param: number) => {
         for (let i = 0; i < Number(container.current?.childElementCount); i++) {
             container.current?.removeChild(container.current?.children[i]);
         }
@@ -21,32 +21,52 @@ function Chart() {
         script.src =
             "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
         script.type = "text/javascript";
-        script.async = true;
-        script.innerHTML = `
-        {
-            "autosize": true,
-            "symbol": "${symbol_param}",
-            "interval": "1",
-            "timezone": "Etc/UTC",
-            "theme": "dark",
-            "style": "1",
-            "locale": "en",
-            "enable_publishing": true,
-            "withdateranges": true,
-            "hide_side_toolbar": false,
-            "allow_symbol_change": true,
-            "details": true,
-            "hotlist": true,
-            "calendar": true,
-            "support_host": "https://www.tradingview.com"
-        }`;
+        script.async = false;
+        if (type_param === 1) {
+            script.innerHTML = `
+            {
+                "symbol": "${symbol_param}",
+                "autosize": true,
+                "interval": "D",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "enable_publishing": true,
+                "calendar": true,
+                "hide_side_toolbar": false,
+                "allow_symbol_change": true,
+                "details": true,
+                "hotlist": true,
+                "withdateranges": true,
+                "support_host": "https://www.tradingview.com"            
+            }`;
+        } else {
+            const randomRange = Date.now() % 2 === 0 ? "3M" : "6M";
+            console.log(randomRange);
+            script.innerHTML = `
+            {
+                "symbol": "${symbol_param}",
+                "autosize": true,
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "range": "${randomRange}",
+                "enable_publishing": false,
+                "hide_top_toolbar": true,
+                "save_image": false,
+                "hide_volume": true,
+                "support_host": "https://www.tradingview.com"       
+            }`;
+        }
         container.current?.appendChild(script);
     };
 
     useEffect(() => {
         return () => {
             getTokens();
-            getTradingView("BITSTAMP:ETHUSD");
+            getTradingView("BITSTAMP:ETHUSD", 1);
         };
     }, []);
 
@@ -56,9 +76,12 @@ function Chart() {
         }
 
         if (tokens.length > 0) {
-            getTradingView(tokens[Math.floor(Math.random() * tokens.length)]);
+            getTradingView(
+                tokens[Math.floor(Math.random() * tokens.length)],
+                2
+            );
         } else {
-            getTradingView("BITSTAMP:ETHUSD");
+            getTradingView("BITSTAMP:ETHUSD", 1);
         }
     };
 
