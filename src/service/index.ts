@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NormalApi } from "./http-common";
+import { NormalApi, AuthApi } from "./http-common";
 
 const Registry = async (param: SignValidInterface) => {
     try {
@@ -18,9 +18,20 @@ const Registry = async (param: SignValidInterface) => {
     }
 };
 
+const GetTradeToken = async () => {
+    try {
+        const { data } = await AuthApi.post("/gettokens");
+
+        return data.tokens;
+    } catch (err) {
+        return [];
+    }
+};
+
 // Export Functions
 const Action = {
     Registry,
+    GetTradeToken,
 };
 
 export default Action;

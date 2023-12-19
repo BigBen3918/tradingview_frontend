@@ -14,3 +14,7 @@ interface User {
     email: string;
     username: string;
 }
+
+interface TradeTokenInterface {
+    name: [string];
+}
