@@ -1,9 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NormalApi, AuthApi } from "./http-common";
+import axios from "axios";
+import { AUTH_KEY } from "../redux/reducers/auth/key";
+
+const BASEURL: string =
+    process.env.REACT_APP_BACKENDURL || "http://127.0.0.1/api";
 
 const Registry = async (param: SignValidInterface) => {
     try {
-        const result: any = await NormalApi.post("/signup", param);
+        const config = {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        };
+
+        const result: any = await axios.post(
+            BASEURL + "/signup",
+            param,
+            config
+        );
 
         if (result.data) {
             return { success: true, msg: result.data };
@@ -19,13 +34,19 @@ const Registry = async (param: SignValidInterface) => {
 };
 
 const GetTradeToken = async () => {
-    try {
-        const { data } = await AuthApi.post("/gettokens");
+    const authToken = localStorage.getItem(AUTH_KEY) || "";
 
-        return data.tokens;
-    } catch (err) {
-        return [];
-    }
+    const config = {
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            authorization: authToken,
+        },
+    };
+
+    const { data } = await axios.post(BASEURL + "/gettokens", {}, config);
+
+    return data.tokens;
 };
 
 // Export Functions

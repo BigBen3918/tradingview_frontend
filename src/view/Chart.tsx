@@ -1,15 +1,39 @@
 import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import Action from "../service";
 import { BsRepeat } from "react-icons/bs";
+import { toast } from "react-toastify";
+import { logout } from "../redux/reducers/auth/authSlice";
 
 function Chart() {
+    const dispatch = useDispatch();
     const [tokens, setTokens] = useState<string[]>([]);
     const container = useRef<HTMLDivElement | null>(null);
 
-    const getTokens = async () => {
-        const { name }: TradeTokenInterface = await Action.GetTradeToken();
+    useEffect(() => {
+        getTokens();
 
-        setTokens(name);
+        return () => {
+            getTradingView("BITSTAMP:ETHUSD", 1);
+        };
+    }, []);
+
+    const getTokens = async () => {
+        try {
+            const { name }: TradeTokenInterface = await Action.GetTradeToken();
+
+            setTokens(name);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.log(err);
+            dispatch(logout());
+
+            if (err.response.status === 403) {
+                toast.error(err.response.statusText);
+            } else {
+                toast.error("Failed Connect");
+            }
+        }
     };
 
     const getTradingView = (symbol_param: string, type_param: number) => {
@@ -43,7 +67,6 @@ function Chart() {
             }`;
         } else {
             const randomRange = Date.now() % 2 === 0 ? "3M" : "6M";
-            console.log(randomRange);
             script.innerHTML = `
             {
                 "symbol": "${symbol_param}",
@@ -62,13 +85,6 @@ function Chart() {
         }
         container.current?.appendChild(script);
     };
-
-    useEffect(() => {
-        return () => {
-            getTokens();
-            getTradingView("BITSTAMP:ETHUSD", 1);
-        };
-    }, []);
 
     const randomChart = () => {
         for (let i = 0; i < Number(container.current?.childElementCount); i++) {

@@ -1,6 +1,7 @@
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./redux/store";
+import { setUser } from "./redux/reducers/auth/authSlice";
 
 import Header from "./components/layouts/header";
 import Home from "./view/Home";
@@ -8,6 +9,7 @@ import Chart from "./view/Chart";
 import SignIn from "./view/auth/SignIn";
 import SignUp from "./view/auth/SignUp";
 import Forgot from "./view/auth/Forgot";
+import { AUTH_KEY } from "./redux/reducers/auth/key";
 
 const ProtectedRoute = () => {
     const isAuth = useSelector(
@@ -26,6 +28,11 @@ const AuthRoute = () => {
 };
 
 function App() {
+    const dispatch = useDispatch();
+    const Token = localStorage.getItem(AUTH_KEY);
+
+    if (Token) dispatch(setUser(Token));
+
     return (
         <div>
             <Header />

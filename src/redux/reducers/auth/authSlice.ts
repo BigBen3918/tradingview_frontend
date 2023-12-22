@@ -25,7 +25,9 @@ export const authSlice = createSlice({
                 username: decoded.username,
             };
 
-            state.isAuthenticated = decoded.exp > Math.floor(Date.now() / 1000);
+            decoded.exp > Math.floor(Date.now() / 1000)
+                ? (state.isAuthenticated = true)
+                : logout();
         },
         logout: (state) => {
             state.user = null;
